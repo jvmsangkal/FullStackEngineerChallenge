@@ -39,11 +39,22 @@ class Users extends Model {
 
   toAuthJSON() {
     return {
+      id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
       role: this.role,
       email: this.email,
       token: this.generateJWT(),
+    }
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      role: this.role,
+      email: this.email,
     }
   }
 }

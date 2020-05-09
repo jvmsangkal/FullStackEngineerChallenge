@@ -49,7 +49,8 @@ router.post('/', isAdmin, async (req, res, next) => {
     newUser.setPasswordHash(user.password)
 
     await newUser.save()
-    return res.json({ user: newUser.toAuthJSON() })
+
+    return res.json({ user: newUser.toJSON() })
   } catch (err) {
     next(err)
   }
@@ -57,6 +58,127 @@ router.post('/', isAdmin, async (req, res, next) => {
 
 router.get('/me', isLoggedIn, (req, res) => {
   return res.json({ user: req.user })
+})
+
+router.get('/', isAdmin, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        limit: {
+          type: 'number',
+          default: 10,
+        },
+        offset: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
+    req.query,
+    { coerceTypes: true }
+  )
+
+  const { limit, offset } = req.query
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  try {
+    const users = await Users.findAll({
+      where: { role: roles.EMPLOYEE },
+      limit,
+      offset,
+    })
+
+    res.json({
+      users: users.map((user) => user.toJSON()),
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:id', isAdmin, (req, res, next) => {
+  const { id } = req.params
+
+  try {
+    const user = Users.findByPk(id)
+
+    if (!user) {
+      return res.status(404).json({ errors: { message: 'User not found' } })
+    }
+
+    res.json({
+      user: user.toJSON(),
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:id', isAdmin, async (req, res, next) => {
+  const { id } = req.params
+
+  try {
+    const user = Users.findByPk(id)
+
+    if (!user) {
+      return res.status(404).json({ errors: { message: 'User not found' } })
+    }
+
+    await user.destroy()
+
+    res.status(200).json({
+      user: 'Successfully deleted',
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:id', isAdmin, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        user: {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            email: { format: 'email' },
+            password: { type: 'string' },
+            role: { enum: [roles.ADMIN, roles.EMPLOYEE] },
+          },
+          required: ['firstName', 'lastName', 'email', 'password', 'role'],
+        },
+      },
+      required: ['user'],
+    },
+    req.body
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { user } = req.body
+  const { id } = req.params
+
+  try {
+    const existingUser = await Users.findByPk(id)
+
+    if (!existingUser) {
+      return res.status(404).json({ errors: { message: 'User not found' } })
+    }
+
+    existingUser.setPasswordHash(user.password)
+    await existingUser.update(user)
+
+    return res.json({ user: existingUser.toJSON() })
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = router

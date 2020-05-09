@@ -14,8 +14,12 @@ function makeErrorResponse(schemaErrors) {
   }
 }
 
-function validate(schema, source) {
-  const ajv = new Ajv({ allErrors: true, removeAdditional: 'all' })
+function validate(schema, source, additionalOpts = {}) {
+  const ajv = new Ajv({
+    allErrors: true,
+    removeAdditional: 'all',
+    ...additionalOpts,
+  })
   const _validate = ajv.compile(schema)
 
   const valid = _validate(source)
