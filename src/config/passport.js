@@ -21,7 +21,7 @@ passport.use(
           })
         }
 
-        return done(null, user)
+        return done(null, user.toAuthJSON())
       } catch (err) {
         done(err)
       }
@@ -43,7 +43,7 @@ passport.use(
       try {
         const user = await Users.findOne({ where: { id: jwt_payload.sub } })
         if (user) {
-          return done(null, user)
+          return done(null, user.toAuthJSON())
         }
 
         return done(null, false)

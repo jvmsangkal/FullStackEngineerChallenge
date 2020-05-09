@@ -8,6 +8,7 @@ exports.isEmployee = (req, res, next) => {
     }
 
     if (user && user.role === roles.EMPLOYEE) {
+      req.user = user
       return next()
     }
 
@@ -26,6 +27,7 @@ exports.isAdmin = (req, res, next) => {
     }
 
     if (user && user.role === roles.ADMIN) {
+      req.user = user
       return next()
     }
 
@@ -44,6 +46,7 @@ exports.isLoggedIn = (req, res, next) => {
     }
 
     if (user) {
+      req.user = user
       return next()
     }
 

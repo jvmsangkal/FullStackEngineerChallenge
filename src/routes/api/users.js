@@ -37,7 +37,9 @@ router.post('/', isAdmin, async (req, res, next) => {
     const existingUser = await Users.findOne({ where: { email: user.email } })
 
     if (existingUser) {
-      res.status(400).send({ errors: { message: 'Email already exists' } })
+      return res
+        .status(400)
+        .json({ errors: { message: 'Email already exists' } })
     }
 
     const newUser = Users.build({
