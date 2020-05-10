@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
 
 const sequelize = require('../config/sequelize')
+const ReviewCategories = require('./review_categories')
 const { Model, DataTypes } = Sequelize
 
 class PerformanceReviews extends Model {}
@@ -39,4 +40,12 @@ PerformanceReviews.init(
   }
 )
 
-module.exports = PerformanceReviews
+const Categories = PerformanceReviews.hasMany(ReviewCategories, {
+  foreignKey: 'performanceReviewId',
+  as: 'categories',
+})
+
+module.exports = {
+  PerformanceReviews,
+  Categories,
+}

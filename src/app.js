@@ -51,11 +51,10 @@ app.use((req, res) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   res.status(err.status || 500)
-
   res.json({
     errors: {
       message: err.message,
-      error: isProd ? {} : err,
+      error: isProd ? {} : err.stack,
     },
   })
 })

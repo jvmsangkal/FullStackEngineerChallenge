@@ -32,6 +32,7 @@ router.post('/', isAdmin, async (req, res, next) => {
   if (!valid) {
     return res.status(400).json(error)
   }
+
   const { user } = req.body
   try {
     const existingUser = await Users.findOne({ where: { email: user.email } })
@@ -84,26 +85,30 @@ router.get('/', isAdmin, async (req, res, next) => {
     return res.status(400).json(error)
   }
 
+  const where = { role: roles.EMPLOYEE }
   try {
     const users = await Users.findAll({
-      where: { role: roles.EMPLOYEE },
+      where,
       limit,
       offset,
     })
 
+    const total = await Users.count({ where })
+
     res.json({
       users: users.map((user) => user.toJSON()),
+      total,
     })
   } catch (err) {
     next(err)
   }
 })
 
-router.get('/:id', isAdmin, (req, res, next) => {
+router.get('/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params
 
   try {
-    const user = Users.findByPk(id)
+    const user = await Users.findByPk(id)
 
     if (!user) {
       return res.status(404).json({ errors: { message: 'User not found' } })
@@ -121,7 +126,7 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params
 
   try {
-    const user = Users.findByPk(id)
+    const user = await Users.findByPk(id)
 
     if (!user) {
       return res.status(404).json({ errors: { message: 'User not found' } })
@@ -173,7 +178,11 @@ router.put('/:id', isAdmin, async (req, res, next) => {
     }
 
     existingUser.setPasswordHash(user.password)
-    await existingUser.update(user)
+    await existingUser.update({
+      ...user,
+      salt: existingUser.salt,
+      passwordHash: existingUser.passwordHash,
+    })
 
     return res.json({ user: existingUser.toJSON() })
   } catch (err) {
