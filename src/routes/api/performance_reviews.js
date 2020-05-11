@@ -5,6 +5,7 @@ const validate = require('../../lib/validate')
 
 const PerformanceReviews = sequelize.model('performance_reviews')
 const ReviewCategories = sequelize.model('review_categories')
+const FeedbackAssignments = sequelize.model('feedback_assignments')
 const { Categories } = require('../../models/performance_reviews')
 
 router.post('/', isAdmin, async (req, res, next) => {
@@ -110,6 +111,11 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
           category.destroy({ transaction: t })
         )
       )
+
+      await FeedbackAssignments.destroy(
+        { where: { performanceReviewId: id } },
+        { transaction: t }
+      )
       await performanceReview.destroy({ transaction: t })
     })
 
@@ -156,7 +162,7 @@ router.put('/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params
 
   try {
-    const performanceReview = await PerformanceReviews.findByPk(id, {
+    let performanceReview = await PerformanceReviews.findByPk(id, {
       include: [
         {
           association: Categories,
@@ -172,12 +178,6 @@ router.put('/:id', isAdmin, async (req, res, next) => {
     }
 
     await sequelize.transaction(async (t) => {
-      await Promise.all(
-        performanceReview.categories.map((category) =>
-          category.destroy({ transaction: t })
-        )
-      )
-
       const categories = await Promise.all(
         newPerformanceReview.categories.map((c) =>
           ReviewCategories.create(
@@ -199,6 +199,15 @@ router.put('/:id', isAdmin, async (req, res, next) => {
           transaction: t,
         }
       )
+    })
+
+    performanceReview = await PerformanceReviews.findByPk(id, {
+      include: [
+        {
+          association: Categories,
+          as: 'categories',
+        },
+      ],
     })
 
     res.json({

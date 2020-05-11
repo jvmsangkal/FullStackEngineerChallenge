@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 
 const sequelize = require('../config/sequelize')
 const { Model, DataTypes } = Sequelize
+const ReviewCategories = require('./review_categories')
 
 class FeedbackAnswers extends Model {}
 
@@ -55,4 +56,12 @@ FeedbackAnswers.init(
   }
 )
 
-module.exports = FeedbackAnswers
+const AnswerCategory = FeedbackAnswers.belongsTo(ReviewCategories, {
+  foreignKey: 'reviewCategoryId',
+  as: 'category',
+})
+
+module.exports = {
+  FeedbackAnswers,
+  AnswerCategory,
+}

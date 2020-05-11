@@ -5,7 +5,7 @@ const { isLoggedIn, isAdmin, isEmployee } = require('../../middlewares/auth')
 const validate = require('../../lib/validate')
 const roles = require('../../config/roles')
 const sequelize = require('../../config/sequelize')
-
+const Op = require('sequelize').Op
 const Users = sequelize.model('users')
 const FeedbackAssignments = sequelize.model('feedback_assignments')
 const {
@@ -145,8 +145,17 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
       return res.status(404).json({ errors: { message: 'User not found' } })
     }
 
-    await user.destroy()
-
+    await sequelize.transaction(async (t) => {
+      await user.destroy({ transaction: t })
+      await FeedbackAssignments.destroy(
+        {
+          where: {
+            [Op.or]: [{ userId: id }, { assignedUserId: id }],
+          },
+        },
+        { transaction: t }
+      )
+    })
     res.status(200).json({
       user: 'Successfully deleted',
     })
@@ -335,4 +344,59 @@ router.get('/reviewees', isEmployee, async (req, res, next) => {
   }
 })
 
+router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        feedback: {
+          type: 'object',
+          properties: {
+            feedbackForUserId: { type: 'string' },
+            performanceReviewId: { type: 'number' },
+            answers: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  reviewCategoryId: { type: 'number' },
+                  rating: { type: 'number' },
+                  explanation: { type: 'string' },
+                },
+                required: ['reviewCategoryId', 'rating', 'explanation'],
+              },
+            },
+          },
+          required: ['feedbackForUserId', 'performanceReviewId'],
+        },
+      },
+      required: ['feedback'],
+    },
+    req.body
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { feedback } = req.body
+  feedback.submittedByUserId = req.user.id
+
+  try {
+    const assignmentExists = await FeedbackAssignments.findOne({
+      where: {
+        userId: feedback.submittedByUserId,
+        assignedId: feedback.feedbackForUserId,
+        performanceReviewId: feedback.performanceReviewId,
+      },
+    })
+
+    if (!assignmentExists) {
+      return res.status(400).json({
+        errors: { message: 'Feedback assignment does not exist' },
+      })
+    }
+  } catch (err) {
+    next(err)
+  }
+})
 module.exports = router

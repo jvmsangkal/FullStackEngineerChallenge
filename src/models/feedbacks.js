@@ -3,6 +3,8 @@ const Sequelize = require('sequelize')
 const sequelize = require('../config/sequelize')
 const { Model, DataTypes } = Sequelize
 
+const { FeedbackAnswers } = require('./feedback_answers')
+
 class Feedbacks extends Model {}
 
 Feedbacks.init(
@@ -49,4 +51,12 @@ Feedbacks.init(
   }
 )
 
-module.exports = Feedbacks
+const Answers = Feedbacks.hasMany(FeedbackAnswers, {
+  foreignKey: 'feedbackId',
+  as: 'answers',
+})
+
+module.exports = {
+  Feedbacks,
+  Answers,
+}

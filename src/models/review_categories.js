@@ -16,7 +16,7 @@ ReviewCategories.init(
     },
     performanceReviewId: {
       type: DataTypes.INTEGER(11).UNSIGNED,
-      allowNull: false,
+      allowNull: true,
       field: 'performance_review_id',
     },
     description: {
