@@ -3,7 +3,7 @@ const Ajv = require('ajv')
 function makeErrorResponse(schemaErrors) {
   let errors = schemaErrors.map((error) => {
     return {
-      path: error.dataPath,
+      path: error.dataPath.substr(1),
       message: error.message,
     }
   })

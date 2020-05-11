@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const sequelize = require('../../config/sequelize')
-const { isAdmin } = require('../../middlewares/auth')
+const { isAdmin, isLoggedIn } = require('../../middlewares/auth')
 const validate = require('../../lib/validate')
 
 const PerformanceReviews = sequelize.model('performance_reviews')
@@ -58,7 +58,7 @@ router.post('/', isAdmin, async (req, res, next) => {
   }
 })
 
-router.get('/:id', isAdmin, async (req, res, next) => {
+router.get('/:id', isLoggedIn, async (req, res, next) => {
   const { id } = req.params
 
   try {
@@ -221,29 +221,37 @@ router.get('/', isAdmin, async (req, res, next) => {
           type: 'number',
           default: 0,
         },
+        all: {
+          type: 'number',
+          default: 0,
+        },
       },
     },
     req.query,
     { coerceTypes: true }
   )
 
-  const { limit, offset } = req.query
+  const { limit, offset, all } = req.query
 
   if (!valid) {
     return res.status(400).json(error)
   }
 
   try {
-    const performanceReviews = await PerformanceReviews.findAll({
-      limit,
-      offset,
-      include: [
-        {
-          association: Categories,
-          as: 'categories',
-        },
-      ],
-    })
+    const performanceReviews = await PerformanceReviews.findAll(
+      all
+        ? {}
+        : {
+            limit,
+            offset,
+            include: [
+              {
+                association: Categories,
+                as: 'categories',
+              },
+            ],
+          }
+    )
 
     const total = await PerformanceReviews.count()
 

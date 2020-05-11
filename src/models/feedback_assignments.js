@@ -3,6 +3,9 @@ const Sequelize = require('sequelize')
 const sequelize = require('../config/sequelize')
 const { Model, DataTypes } = Sequelize
 
+const { PerformanceReviews } = require('./performance_reviews')
+const Users = require('./users')
+
 class FeedbackAssignments extends Model {}
 
 FeedbackAssignments.init(
@@ -49,4 +52,21 @@ FeedbackAssignments.init(
   }
 )
 
-module.exports = FeedbackAssignments
+const AssignedPerformanceReview = FeedbackAssignments.belongsTo(
+  PerformanceReviews,
+  {
+    foreignKey: 'performanceReviewId',
+    as: 'performanceReview',
+  }
+)
+
+const AssignedUser = FeedbackAssignments.belongsTo(Users, {
+  foreignKey: 'assignedUserId',
+  as: 'assignedUser',
+})
+
+module.exports = {
+  FeedbackAssignments,
+  AssignedUser,
+  AssignedPerformanceReview,
+}

@@ -1,12 +1,17 @@
 const { v4: uuidv4 } = require('uuid')
 
 const router = require('express').Router()
-const { isLoggedIn, isAdmin } = require('../../middlewares/auth')
+const { isLoggedIn, isAdmin, isEmployee } = require('../../middlewares/auth')
 const validate = require('../../lib/validate')
 const roles = require('../../config/roles')
 const sequelize = require('../../config/sequelize')
 
 const Users = sequelize.model('users')
+const FeedbackAssignments = sequelize.model('feedback_assignments')
+const {
+  AssignedUser,
+  AssignedPerformanceReview,
+} = require('../../models/feedback_assignments')
 
 router.post('/', isAdmin, async (req, res, next) => {
   const { valid, error } = validate(
@@ -73,24 +78,32 @@ router.get('/', isAdmin, async (req, res, next) => {
           type: 'number',
           default: 0,
         },
+        all: {
+          type: 'number',
+          default: 0,
+        },
       },
     },
     req.query,
     { coerceTypes: true }
   )
 
-  const { limit, offset } = req.query
-
   if (!valid) {
     return res.status(400).json(error)
   }
+
+  const { limit, offset, all } = req.query
 
   const where = { role: roles.EMPLOYEE }
   try {
     const users = await Users.findAll({
       where,
-      limit,
-      offset,
+      ...(all
+        ? {}
+        : {
+            limit,
+            offset,
+          }),
     })
 
     const total = await Users.count({ where })
@@ -185,6 +198,138 @@ router.put('/:id', isAdmin, async (req, res, next) => {
     })
 
     return res.json({ user: existingUser.toJSON() })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/:id/feedback_assignments', isAdmin, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        limit: {
+          type: 'number',
+          default: 10,
+        },
+        offset: {
+          type: 'number',
+          default: 0,
+        },
+        all: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
+    req.query,
+    { coerceTypes: true }
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { limit, offset, all } = req.query
+  const { id } = req.params
+
+  try {
+    const where = { userId: id }
+    const data = await FeedbackAssignments.findAll({
+      where,
+      ...(all
+        ? {}
+        : {
+            limit,
+            offset,
+          }),
+      include: [
+        {
+          association: AssignedPerformanceReview,
+          as: 'performanceReview',
+        },
+        {
+          association: AssignedUser,
+          as: 'assignedUser',
+        },
+      ],
+    })
+
+    const total = await FeedbackAssignments.count({ where })
+
+    res.json({
+      FeedbackAssignments: data.map((d) => ({
+        ...d.dataValues,
+        assignedUser: d.assignedUser.toJSON(),
+        performanceReview: d.performanceReview.dataValues,
+      })),
+      total,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/reviewees', isEmployee, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        limit: {
+          type: 'number',
+          default: 10,
+        },
+        offset: {
+          type: 'number',
+          default: 0,
+        },
+        all: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
+    req.query,
+    { coerceTypes: true }
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { limit, offset, all } = req.query
+  const { id } = req.user
+
+  try {
+    const where = { userId: id }
+    const data = await FeedbackAssignments.findAll({
+      where,
+      ...(all
+        ? {}
+        : {
+            limit,
+            offset,
+          }),
+      include: [
+        {
+          association: AssignedPerformanceReview,
+          as: 'performanceReview',
+        },
+        {
+          association: AssignedUser,
+          as: 'assignedUser',
+        },
+      ],
+    })
+
+    const total = await FeedbackAssignments.count({ where })
+
+    res.json({
+      FeedbackAssignments: data.map((d) => ({
+        ...d.dataValues,
+        assignedUser: d.assignedUser.toJSON(),
+        performanceReview: d.performanceReview.dataValues,
+      })),
+      total,
+    })
   } catch (err) {
     next(err)
   }
