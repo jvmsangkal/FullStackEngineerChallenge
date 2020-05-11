@@ -13,7 +13,13 @@ const {
   AssignedUser,
   AssignedPerformanceReview,
 } = require('../../models/feedback_assignments')
-const { Answers } = require('../../models/feedbacks')
+const {
+  Answers,
+  SubmittedByUser,
+  FeedbackPerformanceReview,
+} = require('../../models/feedbacks')
+
+const { AnswerCategory } = require('../../models/feedback_answers')
 
 router.post('/', isAdmin, async (req, res, next) => {
   const { valid, error } = validate(
@@ -414,4 +420,85 @@ router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/:id/feedbacks', isAdmin, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        limit: {
+          type: 'number',
+          default: 10,
+        },
+        offset: {
+          type: 'number',
+          default: 0,
+        },
+        all: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
+    req.query,
+    { coerceTypes: true }
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { limit, offset, all } = req.query
+  const feedbackForUserId = req.params.id
+
+  try {
+    const where = { feedbackForUserId }
+    const data = await Feedbacks.findAll({
+      where,
+      ...(all
+        ? {}
+        : {
+            limit,
+            offset,
+          }),
+      include: [
+        {
+          association: SubmittedByUser,
+          as: 'submittedByUser',
+        },
+        {
+          association: FeedbackPerformanceReview,
+          as: 'performanceReview',
+        },
+        {
+          association: Answers,
+          as: 'answers',
+          include: [
+            {
+              association: AnswerCategory,
+              as: 'category',
+            },
+          ],
+        },
+      ],
+    })
+
+    const total = await Feedbacks.count({ where })
+
+    res.send({
+      feedback: data.map((d) => ({
+        ...d.dataValues,
+        submittedByUser: d.submittedByUser.toJSON(),
+        performanceReview: d.performanceReview.dataValues,
+        answers: d.answers.map((a) => ({
+          ...a.dataValues,
+          category: a.category.dataValues,
+        })),
+      })),
+      total,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router

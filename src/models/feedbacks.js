@@ -4,6 +4,8 @@ const sequelize = require('../config/sequelize')
 const { Model, DataTypes } = Sequelize
 
 const { FeedbackAnswers } = require('./feedback_answers')
+const { PerformanceReviews } = require('./performance_reviews')
+const Users = require('./users')
 
 class Feedbacks extends Model {}
 
@@ -56,7 +58,19 @@ const Answers = Feedbacks.hasMany(FeedbackAnswers, {
   as: 'answers',
 })
 
+const SubmittedByUser = Feedbacks.belongsTo(Users, {
+  foreignKey: 'submittedByUserId',
+  as: 'submittedByUser',
+})
+
+const FeedbackPerformanceReview = Feedbacks.belongsTo(PerformanceReviews, {
+  foreignKey: 'performanceReviewId',
+  as: 'performanceReview',
+})
+
 module.exports = {
   Feedbacks,
   Answers,
+  SubmittedByUser,
+  FeedbackPerformanceReview,
 }
