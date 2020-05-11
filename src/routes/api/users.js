@@ -8,10 +8,12 @@ const sequelize = require('../../config/sequelize')
 const Op = require('sequelize').Op
 const Users = sequelize.model('users')
 const FeedbackAssignments = sequelize.model('feedback_assignments')
+const Feedbacks = sequelize.model('feedbacks')
 const {
   AssignedUser,
   AssignedPerformanceReview,
 } = require('../../models/feedback_assignments')
+const { Answers } = require('../../models/feedbacks')
 
 router.post('/', isAdmin, async (req, res, next) => {
   const { valid, error } = validate(
@@ -395,6 +397,19 @@ router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
         errors: { message: 'Feedback assignment does not exist' },
       })
     }
+
+    const data = await Feedbacks.create(feedback, {
+      include: [
+        {
+          association: Answers,
+          as: 'answers',
+        },
+      ],
+    })
+
+    res.send({
+      feedback: data.toJSON(),
+    })
   } catch (err) {
     next(err)
   }
