@@ -1,0 +1,593 @@
+{
+	"info": {
+		"_postman_id": "84aac06b-ab93-4bc8-b966-27cf19d77aa7",
+		"name": "Paypay Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login as Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"email\": \"admin@admin.com\",\n\t\t\"password\": \"adminadmin\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"firstName\": \"kakashi\",\n\t\t\"lastName\": \"hatake\",\n\t\t\"email\": \"kakashi@konoha.com\",\n\t\t\"password\": \"sharingan\",\n\t\t\"role\": \"employee\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get employees",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/503fc5a9-e9a3-4602-886c-80ea0816f8e3",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"503fc5a9-e9a3-4602-886c-80ea0816f8e3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"firstName\": \"kakashi\",\n\t\t\"lastName\": \"hatake\",\n\t\t\"email\": \"kakashi@konoha.com\",\n\t\t\"password\": \"sharingan\",\n\t\t\"role\": \"employee\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users/fea9f949-47f4-43ce-890a-bfbd60d88fdd",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"fea9f949-47f4-43ce-890a-bfbd60d88fdd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/93afbefa-0b1c-4bd9-b518-915c43dc9a52",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"93afbefa-0b1c-4bd9-b518-915c43dc9a52"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Performance Review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"performanceReview\": {\n\t\t\"name\": \"Tech Performance Review v4\",\n\t\t\"categories\": [\n\t\t\t{\n\t\t\t\t\"description\": \"category 1\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"description\": \"category 2\"\n\t\t\t}\n\t\t]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/performance_reviews",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"performance_reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Performance Review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/performance_reviews/11",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"performance_reviews",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Performance Review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"performanceReview\": {\n\t\t\"name\": \"Tech Performance Review v4\",\n\t\t\"categories\": [\n\t\t\t{\n\t\t\t\t\"description\": \"category 1\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"description\": \"category 3\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"description\": \"category 7\"\n\t\t\t}\n\t\t]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/performance_reviews/12",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"performance_reviews",
+						"12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Performance Reviews",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/performance_reviews",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"performance_reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Performance Review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/performance_reviews/12",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"performance_reviews",
+						"12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feedback Assignment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/api/users/503fc5a9-e9a3-4602-886c-80ea0816f8e3/feedback_assignments/",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"503fc5a9-e9a3-4602-886c-80ea0816f8e3",
+						"feedback_assignments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Feedback Assignment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"feedbackAssignment\": {\n\t\t\"userId\": \"503fc5a9-e9a3-4602-886c-80ea0816f8e3\",\n\t\t\"assignedUserId\": \"53e2092a-85ab-48eb-a82e-4fb82d26a0f7\",\n\t\t\"performanceReviewId\": 12\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/feedback_assignments/",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"feedback_assignments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Feedback Assignment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/feedback_assignments/1",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"feedback_assignments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login as Employee",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"user\": {\n\t\t\"email\": \"naruto@konoha.com\",\n\t\t\"password\": \"konohanumberone\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit employee feedback",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcnV0b0Brb25vaGEuY29tIiwic3ViIjoiNTAzZmM1YTktZTlhMy00NjAyLTg4NmMtODBlYTA4MTZmOGUzIiwiZXhwIjoxNTk0NDczMjQxLCJpYXQiOjE1ODkyODkyNDF9.bYEY8p1jm0FAFn2zJKhhrjcJ5iax_5INeUZ7h5A5PLo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"feedback\": {\n\t\t\"performanceReviewId\": 12,\n\t\t\"answers\": [\n\t\t\t{\n\t\t\t\t\"reviewCategoryId\": 42,\n\t\t\t\t\"rating\": 5,\n\t\t\t\t\"explanation\": \"test\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"reviewCategoryId\": 43,\n\t\t\t\t\"rating\": 3,\n\t\t\t\t\"explanation\": \"test2\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"reviewCategoryId\": 44,\n\t\t\t\t\"rating\": 2,\n\t\t\t\t\"explanation\": \"test3\"\n\t\t\t}\n\t\t]\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users/53e2092a-85ab-48eb-a82e-4fb82d26a0f7/feedbacks",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"53e2092a-85ab-48eb-a82e-4fb82d26a0f7",
+						"feedbacks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get employee feedbacks",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInN1YiI6IjdmOTM0YmJiLTBiZWMtNDU0My1hZDM3LWJiMDIxYTQ0ZjdiMSIsImV4cCI6MTU5NDE4NTYyMiwiaWF0IjoxNTg5MDAxNjIyfQ.vlEwAWCmmXyQziyP6tgM46xkdCCO5IhjYBubj_bxs10",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users/53e2092a-85ab-48eb-a82e-4fb82d26a0f7/feedbacks",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"53e2092a-85ab-48eb-a82e-4fb82d26a0f7",
+						"feedbacks"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

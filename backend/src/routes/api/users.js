@@ -359,7 +359,6 @@ router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
         feedback: {
           type: 'object',
           properties: {
-            feedbackForUserId: { type: 'string' },
             performanceReviewId: { type: 'number' },
             answers: {
               type: 'array',
@@ -374,7 +373,7 @@ router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
               },
             },
           },
-          required: ['feedbackForUserId', 'performanceReviewId'],
+          required: ['performanceReviewId', 'answers'],
         },
       },
       required: ['feedback'],
@@ -388,12 +387,13 @@ router.post('/:id/feedbacks', isEmployee, async (req, res, next) => {
 
   const { feedback } = req.body
   feedback.submittedByUserId = req.user.id
+  feedback.feedbackForUserId = req.params.id
 
   try {
     const assignmentExists = await FeedbackAssignments.findOne({
       where: {
         userId: feedback.submittedByUserId,
-        assignedId: feedback.feedbackForUserId,
+        assignedUserId: feedback.feedbackForUserId,
         performanceReviewId: feedback.performanceReviewId,
       },
     })
@@ -485,7 +485,7 @@ router.get('/:id/feedbacks', isAdmin, async (req, res, next) => {
     const total = await Feedbacks.count({ where })
 
     res.send({
-      feedback: data.map((d) => ({
+      feedbacks: data.map((d) => ({
         ...d.dataValues,
         submittedByUser: d.submittedByUser.toJSON(),
         performanceReview: d.performanceReview.dataValues,
