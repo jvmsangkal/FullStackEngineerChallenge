@@ -64,20 +64,35 @@ export default {
       clipped: false,
       drawer: false,
       fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
-      ],
       miniVariant: false,
       title: 'Vuetify.js'
+    }
+  },
+  computed: {
+    items() {
+      const { role } = this.$store.state.auth.user
+      if (role === 'admin') {
+        return [
+          {
+            icon: 'mdi-account-group',
+            title: 'Empoyees',
+            to: '/employees'
+          },
+          {
+            icon: 'mdi-note-multiple',
+            title: 'Performance Reviews',
+            to: '/performance_reviews'
+          }
+        ]
+      } else {
+        return [
+          {
+            icon: 'mdi-clipboard-account',
+            title: 'Feedback Assignments',
+            to: '/feedback_assignments'
+          }
+        ]
+      }
     }
   },
   methods: {
