@@ -36,6 +36,12 @@
         <nuxt />
       </v-container>
     </v-content>
+    <v-snackbar v-model="snackbar" top right :timeout="6000">
+      {{ snackbarMessage }}
+      <v-btn dark text :color="snackbarColor" @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -45,7 +51,10 @@ import capitalize from 'lodash/capitalize'
 export default {
   data() {
     return {
-      drawer: false
+      drawer: false,
+      snackbar: false,
+      snackbarColor: 'success',
+      snackbarMessage: ''
     }
   },
   computed: {
@@ -78,6 +87,16 @@ export default {
         ]
       }
     }
+  },
+  created() {
+    this.$nuxt.$on('snackbar', (options) => {
+      const { color, message } = options
+
+      this.snackbarColor = color
+      this.snackbarMessage = message
+
+      this.snackbar = true
+    })
   },
   methods: {
     logout() {

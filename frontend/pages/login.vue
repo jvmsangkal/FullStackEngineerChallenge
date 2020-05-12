@@ -21,6 +21,7 @@
           label="Password"
           name="password"
           prepend-icon="mdi-lock"
+          :rules="[(v) => !!v || 'Password is required']"
           type="password"
           required
         ></v-text-field>
@@ -56,6 +57,7 @@ export default {
       password: ''
     }
   },
+
   methods: {
     async userLogin() {
       if (!this.valid) {

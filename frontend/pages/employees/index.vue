@@ -7,6 +7,7 @@
         :options.sync="options"
         :server-items-length="totalEmployees"
         :loading="loading"
+        loading-text="Loading... Please wait"
         class="elevation-1"
       >
         <template v-slot:top>
@@ -27,55 +28,85 @@
 
                 <v-card-text>
                   <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.name"
-                          label="Dessert name"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.calories"
-                          label="Calories"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.fat"
-                          label="Fat (g)"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.carbs"
-                          label="Carbs (g)"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.protein"
-                          label="Protein (g)"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
+                    <v-form v-model="valid" @submit.prevent="save">
+                      <v-row>
+                        <v-col cols="12" sm="12" md="6">
+                          <v-text-field
+                            v-model="editedItem.firstName"
+                            label="First name"
+                            :rules="[(v) => !!v || 'First name is required']"
+                            required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" md="6">
+                          <v-text-field
+                            v-model="editedItem.lastName"
+                            label="Last name"
+                            :rules="[(v) => !!v || 'Last name is required']"
+                            required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field
+                            v-model="editedItem.email"
+                            label="Email"
+                            :rules="emailRules"
+                            required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" md="12">
+                          <v-text-field
+                            v-model="editedItem.password"
+                            type="password"
+                            label="Password"
+                            :rules="[(v) => !!v || 'Password is required']"
+                            required
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-form>
                   </v-container>
                 </v-card-text>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close"
-                    >Cancel</v-btn
-                  >
+                  <v-btn color="blue darken-1" text @click="close">
+                    Cancel
+                  </v-btn>
                   <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="deleteDialog" persistent max-width="290">
+              <v-card>
+                <v-card-title
+                  >Are you sure you want to delete this item?</v-card-title
+                >
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeDeleteDialog"
+                    >No</v-btn
+                  >
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="confirmDeleteDialog"
+                    >Yes</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon small @click="viewEmployee(item)">
+          <v-icon small class="mr-2" @click="viewEmployee(item)">
             mdi-eye
+          </v-icon>
+          <v-icon small class="mr-2" @click="editEmployee(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon small @click="deleteEmployee(item)">
+            mdi-delete
           </v-icon>
         </template>
         <template v-slot:no-data>
@@ -93,7 +124,14 @@ import startCase from 'lodash/startCase'
 export default {
   middleware: 'isAdmin',
   data: () => ({
+    emailRules: [
+      (v) => !!v || 'E-mail is required',
+      (v) => /.+@.+/.test(v) || 'E-mail must be valid'
+    ],
     dialog: false,
+    valid: false,
+    deleteDialog: false,
+    deleteId: '',
     headers: [
       {
         text: 'Name',
@@ -112,26 +150,24 @@ export default {
     loading: true,
     employees: [],
     totalEmployees: 0,
-    editedIndex: -1,
+    editId: '',
     editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
     },
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
     }
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editId === -1 ? 'New Employee' : 'Edit Employee'
     }
   },
 
@@ -141,20 +177,14 @@ export default {
     },
     options: {
       handler() {
-        this.getDataFromApi().then((data) => {
-          this.employees = data.users
-          this.totalEmployees = data.total
-        })
+        this.getDataFromApi()
       },
       deep: true
     }
   },
 
   mounted() {
-    this.getDataFromApi().then((data) => {
-      this.employees = data.users
-      this.totalEmployees = data.total
-    })
+    this.getDataFromApi()
   },
 
   methods: {
@@ -169,39 +199,112 @@ export default {
 
       data.users = data.users.map((d) => ({
         ...d,
+        firstName: startCase(lowerCase(d.firstName)),
+        lastName: startCase(lowerCase(d.lastName)),
         fullName: startCase(lowerCase(d.firstName + ' ' + d.lastName))
       }))
+
+      this.employees = data.users
+      this.totalEmployees = data.total
 
       this.loading = false
       return data
     },
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
+    deleteEmployee(item) {
+      this.deleteDialog = true
+      this.deleteId = item.id
+    },
+
+    closeDeleteDialog() {
+      this.deleteDialog = false
+      this.deleteId = ''
+    },
+
+    async confirmDeleteDialog() {
+      try {
+        await this.$axios.$delete('/api/users/' + this.deleteId)
+        this.$nuxt.$emit('snackbar', {
+          color: 'success',
+          message: 'Successfully deleted!'
+        })
+      } catch (err) {
+        this.$nuxt.$emit('snackbar', {
+          color: 'error',
+          message: 'Something went wrong!'
+        })
+      }
+      this.getDataFromApi()
+      this.deleteDialog = false
+      this.deleteId = ''
     },
 
     viewEmployee(item) {
-      const index = this.desserts.indexOf(item)
-      confirm('Are you sure you want to delete this item?') &&
-        this.desserts.splice(index, 1)
+      this.$router.push(`/employees/${item.id}`)
+    },
+
+    editEmployee(item) {
+      this.editId = item.id
+      this.editedItem = Object.assign({ password: '' }, item)
+      this.dialog = true
     },
 
     close() {
       this.dialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.editId = ''
       })
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
+    async save() {
+      if (!this.valid) {
+        return
       }
+
+      this.editedItem.firstName = startCase(
+        lowerCase(this.editedItem.firstName)
+      )
+      this.editedItem.lastName = startCase(lowerCase(this.editedItem.lastName))
+
+      if (this.editId) {
+        try {
+          await this.$axios.$put('/api/users/' + this.editId, {
+            user: {
+              ...this.editedItem,
+              role: 'employee'
+            }
+          })
+          this.$nuxt.$emit('snackbar', {
+            color: 'success',
+            message: 'Successfully updated!'
+          })
+        } catch (err) {
+          this.$nuxt.$emit('snackbar', {
+            color: 'error',
+            message: 'Something went wrong!'
+          })
+        }
+      } else {
+        try {
+          await this.$axios.$post('/api/users/', {
+            user: {
+              ...this.editedItem,
+              role: 'employee'
+            }
+          })
+          this.$nuxt.$emit('snackbar', {
+            color: 'success',
+            message: 'Successfully updated!'
+          })
+        } catch (err) {
+          this.$nuxt.$emit('snackbar', {
+            color: 'error',
+            message: 'Something went wrong!'
+          })
+        }
+      }
+      this.getDataFromApi()
       this.close()
     }
   }

@@ -250,6 +250,12 @@ router.get('/:id/feedback_assignments', isAdmin, async (req, res, next) => {
   const { id } = req.params
 
   try {
+    const existingUser = await Users.findByPk(id)
+
+    if (!existingUser) {
+      return res.status(404).json({ errors: { message: 'User not found' } })
+    }
+
     const where = { userId: id }
     const data = await FeedbackAssignments.findAll({
       where,
@@ -487,7 +493,7 @@ router.get('/:id/feedbacks', isAdmin, async (req, res, next) => {
     res.send({
       feedbacks: data.map((d) => ({
         ...d.dataValues,
-        submittedByUser: d.submittedByUser.toJSON(),
+        submittedByUser: d.submittedByUser && d.submittedByUser.toJSON(),
         performanceReview: d.performanceReview.dataValues,
         answers: d.answers.map((a) => ({
           ...a.dataValues,
