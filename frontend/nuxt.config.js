@@ -1,5 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
+require('dotenv').config()
+
 export default {
   mode: 'universal',
   /*
@@ -36,10 +38,11 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
+    ['@nuxtjs/eslint-module', { emitWarning: true }],
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/date-fns'
   ],
   /*
    ** Nuxt.js modules
@@ -49,7 +52,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth'
   ],
   /*
    ** Axios module configuration
@@ -85,5 +89,32 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+
+  router: {
+    middleware: ['auth']
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: process.env.API_URL + '/api/auth/login',
+            method: 'post',
+            propertyName: 'user.token'
+          },
+          logout: false,
+          user: {
+            url: process.env.API_URL + '/api/users/me',
+            method: 'get',
+            propertyName: 'user'
+          }
+        }
+      }
+    },
+    redirect: {
+      logout: '/login'
+    }
   }
 }
