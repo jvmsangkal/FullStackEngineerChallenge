@@ -1,6 +1,6 @@
 # frontend
 
-> Paypay Challenge Frontend
+> My world-class Nuxt.js project
 
 ## Build Setup
 
