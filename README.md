@@ -119,7 +119,7 @@ Table of contents
 
 - Users are assigned to review other users with a corresponding performance review.
 
-- Users are allowed to submit multiple feedbacks for a performance review.
+- Users are allowed to submit multiple feedbacks for a given user and performance review.
 
 - Deleting a user won't delete previously submitted feedbacks by that user
 
