@@ -41,18 +41,25 @@
                       </v-row>
                       <v-row>
                         <v-col cols="12" sm="12" md="12">
-                          <v-btn dark small color="primary" @click="addCategory">Add Category</v-btn>
+                          <v-btn dark small color="primary" @click="addCategory"
+                            >Add Category</v-btn
+                          >
                         </v-col>
                       </v-row>
-                      <v-row v-for="(category, index) in editedItem.categories" :key="index">
+                      <v-row
+                        v-for="(category, index) in editedItem.categories"
+                        :key="index"
+                      >
                         <v-col cols="12" sm="12" md="12">
                           <v-text-field
                             v-model="editedItem.categories[index].description"
-                            :label="'Category ' + ( index + 1 )"
-                            :rules="[(v) => !!v || 'Category description is required']"
+                            :label="'Category ' + (index + 1)"
+                            :rules="[
+                              (v) => !!v || 'Category description is required'
+                            ]"
                             append-icon="mdi-close"
-                            @click:append="deleteCategory(index)"
                             required
+                            @click:append="deleteCategory(index)"
                           ></v-text-field>
                         </v-col>
                       </v-row>

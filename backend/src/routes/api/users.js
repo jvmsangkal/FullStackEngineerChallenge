@@ -280,7 +280,7 @@ router.get('/:id/feedback_assignments', isAdmin, async (req, res, next) => {
     const total = await FeedbackAssignments.count({ where })
 
     res.json({
-      FeedbackAssignments: data.map((d) => ({
+      feedbackAssignments: data.map((d) => ({
         ...d.dataValues,
         assignedUser: d.assignedUser.toJSON(),
         performanceReview: d.performanceReview.dataValues,
