@@ -1,4 +1,3 @@
-CREATE DATABASE `paypay_challenge`;
 USE `paypay_challenge`;
 
 DROP TABLE IF EXISTS `users`;
