@@ -262,7 +262,7 @@ export default {
         })
         this.$nuxt.$emit('snackbar', {
           color: 'success',
-          message: 'Successfully updated!'
+          message: 'Successfully added!'
         })
       } catch (err) {
         this.$nuxt.$emit('snackbar', {

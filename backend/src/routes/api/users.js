@@ -9,6 +9,7 @@ const Op = require('sequelize').Op
 const Users = sequelize.model('users')
 const FeedbackAssignments = sequelize.model('feedback_assignments')
 const Feedbacks = sequelize.model('feedbacks')
+const { Categories } = require('../../models/performance_reviews')
 const {
   AssignedUser,
   AssignedPerformanceReview,
@@ -117,6 +118,12 @@ router.get('/me/reviewees', isEmployee, async (req, res, next) => {
         {
           association: AssignedPerformanceReview,
           as: 'performanceReview',
+          include: [
+            {
+              association: Categories,
+              as: 'category',
+            },
+          ],
         },
         {
           association: AssignedUser,

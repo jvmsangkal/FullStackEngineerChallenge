@@ -14,7 +14,6 @@
           :rules="emailRules"
           required
         ></v-text-field>
-
         <v-text-field
           id="password"
           v-model="password"
