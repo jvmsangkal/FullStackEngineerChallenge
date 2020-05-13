@@ -6,6 +6,7 @@ const validate = require('../../lib/validate')
 const PerformanceReviews = sequelize.model('performance_reviews')
 const ReviewCategories = sequelize.model('review_categories')
 const FeedbackAssignments = sequelize.model('feedback_assignments')
+const Feedbacks = sequelize.model('feedbacks')
 const { Categories } = require('../../models/performance_reviews')
 
 router.post('/', isAdmin, async (req, res, next) => {
@@ -116,6 +117,12 @@ router.delete('/:id', isAdmin, async (req, res, next) => {
         { where: { performanceReviewId: id } },
         { transaction: t }
       )
+
+      await Feedbacks.destroy(
+        { where: { performanceReviewId: id } },
+        { transaction: t }
+      )
+
       await performanceReview.destroy({ transaction: t })
     })
 
