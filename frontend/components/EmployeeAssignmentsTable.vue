@@ -6,7 +6,7 @@
     :server-items-length="totalAssignments"
     :loading="loading"
     loading-text="Loading... Please wait"
-    class="elevation-1"
+    class="elevation-3"
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -168,17 +168,17 @@ export default {
 
   methods: {
     async getUsers() {
-      const response = await this.$axios('/api/users', { params: { all: 1 } })
+      const data = await this.$axios.$get('/api/users', { params: { all: 1 } })
 
-      this.users = response.data.users
+      this.users = data.users
     },
 
     async getPerformanceReviews() {
-      const response = await this.$axios('/api/performance_reviews', {
+      const data = await this.$axios.$get('/api/performance_reviews', {
         params: { all: 1 }
       })
 
-      this.performanceReviews = response.data.performanceReviews
+      this.performanceReviews = data.performanceReviews
     },
 
     async getDataFromApi() {

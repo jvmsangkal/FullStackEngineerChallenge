@@ -9,17 +9,20 @@
       <employee-assignments-table
         :user-id="user.id"
       ></employee-assignments-table>
+      <employee-feedbacks-table :user-id="user.id"></employee-feedbacks-table>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
 import EmployeeAssignmentsTable from '@/components/EmployeeAssignmentsTable'
+import EmployeeFeedbacksTable from '@/components/EmployeeFeedbacksTable'
 
 export default {
   middleware: 'isAdmin',
   components: {
-    EmployeeAssignmentsTable
+    EmployeeAssignmentsTable,
+    EmployeeFeedbacksTable
   },
   async asyncData({ params, $axios, error }) {
     try {

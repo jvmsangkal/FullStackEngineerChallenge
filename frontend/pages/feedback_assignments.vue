@@ -96,8 +96,6 @@ export default {
   data: () => ({
     dialog: false,
     valid: false,
-    deleteDialog: false,
-    deleteId: '',
     headers: [
       {
         text: 'Full Name',
@@ -142,14 +140,6 @@ export default {
   },
 
   methods: {
-    async getPerformanceReviews() {
-      const response = await this.$axios('/api/performance_reviews', {
-        params: { all: 1 }
-      })
-
-      this.performanceReviews = response.data.performanceReviews
-    },
-
     async getDataFromApi() {
       this.loading = true
       const { page, itemsPerPage: limit } = this.options
