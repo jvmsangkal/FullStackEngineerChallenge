@@ -74,6 +74,72 @@ router.get('/me', isLoggedIn, (req, res) => {
   return res.json({ user: req.user })
 })
 
+router.get('/me/reviewees', isEmployee, async (req, res, next) => {
+  const { valid, error } = validate(
+    {
+      properties: {
+        limit: {
+          type: 'number',
+          default: 10,
+        },
+        offset: {
+          type: 'number',
+          default: 0,
+        },
+        all: {
+          type: 'number',
+          default: 0,
+        },
+      },
+    },
+    req.query,
+    { coerceTypes: true }
+  )
+
+  if (!valid) {
+    return res.status(400).json(error)
+  }
+
+  const { limit, offset, all } = req.query
+  const { id } = req.user
+
+  try {
+    const where = { userId: id }
+    const data = await FeedbackAssignments.findAll({
+      where,
+      ...(all
+        ? {}
+        : {
+            limit,
+            offset,
+          }),
+      include: [
+        {
+          association: AssignedPerformanceReview,
+          as: 'performanceReview',
+        },
+        {
+          association: AssignedUser,
+          as: 'assignedUser',
+        },
+      ],
+    })
+
+    const total = await FeedbackAssignments.count({ where })
+
+    res.json({
+      feedbackAssignments: data.map((d) => ({
+        ...d.dataValues,
+        assignedUser: d.assignedUser.toJSON(),
+        performanceReview: d.performanceReview.dataValues,
+      })),
+      total,
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
 router.get('/', isAdmin, async (req, res, next) => {
   const { valid, error } = validate(
     {
@@ -281,72 +347,6 @@ router.get('/:id/feedback_assignments', isAdmin, async (req, res, next) => {
 
     res.json({
       feedbackAssignments: data.map((d) => ({
-        ...d.dataValues,
-        assignedUser: d.assignedUser.toJSON(),
-        performanceReview: d.performanceReview.dataValues,
-      })),
-      total,
-    })
-  } catch (err) {
-    next(err)
-  }
-})
-
-router.get('/reviewees', isEmployee, async (req, res, next) => {
-  const { valid, error } = validate(
-    {
-      properties: {
-        limit: {
-          type: 'number',
-          default: 10,
-        },
-        offset: {
-          type: 'number',
-          default: 0,
-        },
-        all: {
-          type: 'number',
-          default: 0,
-        },
-      },
-    },
-    req.query,
-    { coerceTypes: true }
-  )
-
-  if (!valid) {
-    return res.status(400).json(error)
-  }
-
-  const { limit, offset, all } = req.query
-  const { id } = req.user
-
-  try {
-    const where = { userId: id }
-    const data = await FeedbackAssignments.findAll({
-      where,
-      ...(all
-        ? {}
-        : {
-            limit,
-            offset,
-          }),
-      include: [
-        {
-          association: AssignedPerformanceReview,
-          as: 'performanceReview',
-        },
-        {
-          association: AssignedUser,
-          as: 'assignedUser',
-        },
-      ],
-    })
-
-    const total = await FeedbackAssignments.count({ where })
-
-    res.json({
-      FeedbackAssignments: data.map((d) => ({
         ...d.dataValues,
         assignedUser: d.assignedUser.toJSON(),
         performanceReview: d.performanceReview.dataValues,

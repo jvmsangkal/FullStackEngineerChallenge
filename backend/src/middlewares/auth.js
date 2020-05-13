@@ -1,7 +1,7 @@
 const passport = require('passport')
 const roles = require('../config/roles')
 
-exports.isEmployee = (req, res, next) => {
+const isEmployee = (req, res, next) => {
   return passport.authenticate('jwt', { session: false }, (err, user) => {
     if (err) {
       return next(err)
@@ -20,7 +20,7 @@ exports.isEmployee = (req, res, next) => {
   })(req, res, next)
 }
 
-exports.isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   return passport.authenticate('jwt', { session: false }, (err, user) => {
     if (err) {
       return next(err)
@@ -39,7 +39,7 @@ exports.isAdmin = (req, res, next) => {
   })(req, res, next)
 }
 
-exports.isLoggedIn = (req, res, next) => {
+const isLoggedIn = (req, res, next) => {
   return passport.authenticate('jwt', { session: false }, (err, user) => {
     if (err) {
       return next(err)
@@ -56,4 +56,10 @@ exports.isLoggedIn = (req, res, next) => {
       },
     })
   })(req, res, next)
+}
+
+module.exports = {
+  isEmployee,
+  isAdmin,
+  isLoggedIn
 }
