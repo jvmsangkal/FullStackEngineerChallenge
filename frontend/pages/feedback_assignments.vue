@@ -18,7 +18,10 @@
             <v-dialog v-model="dialog" max-width="700px">
               <v-card v-if="activeAssignment">
                 <v-card-title>
-                  <span class="headline">{{ activeAssignment.assignedUser.firstName }} {{ activeAssignment.assignedUser.lastName }}</span>
+                  <span class="headline"
+                    >{{ activeAssignment.assignedUser.firstName }}
+                    {{ activeAssignment.assignedUser.lastName }}</span
+                  >
                 </v-card-title>
                 <v-card-subtitle>
                   <span>{{ activeAssignment.performanceReview.name }}</span>
@@ -27,15 +30,20 @@
                 <v-card-text>
                   <v-container>
                     <v-form v-model="valid" @submit.prevent="submitFeedback">
-                      <v-row v-for="category in activeAssignment.performanceReview.categories" :key="category.id">
+                      <v-row
+                        v-for="category in activeAssignment.performanceReview
+                          .categories"
+                        :key="category.id"
+                      >
                         <v-col cols="12" sm="12" md="12">
                           <p>{{ category.description }}</p>
                           <v-radio-group
-                            label="Rating"
                             v-model="category.rating"
+                            label="Rating"
                             :rules="[(v) => !!v || 'Rating is required']"
                             dense
-                            row>
+                            row
+                          >
                             <v-radio label="1" value="1"></v-radio>
                             <v-radio label="2" value="2"></v-radio>
                             <v-radio label="3" value="3"></v-radio>
@@ -45,7 +53,9 @@
                           <v-text-field
                             v-model="category.explanation"
                             label="Brief explanation"
-                            :rules="[(v) => !!v || 'Brief explanation is required']"
+                            :rules="[
+                              (v) => !!v || 'Brief explanation is required'
+                            ]"
                             required
                             dense
                           ></v-text-field>
@@ -187,16 +197,21 @@ export default {
       }
 
       try {
-        await this.$axios.$post(`/api/users/${this.activeAssignment.assignedUserId}/feedbacks/`, {
-          feedback: {
-            performanceReviewId: this.activeAssignment.performanceReviewId,
-            answers: this.activeAssignment.performanceReview.categories.map(category => ({
-              reviewCategoryId: category.id,
-              rating: +category.rating,
-              explanation: category.explanation
-            }))
+        await this.$axios.$post(
+          `/api/users/${this.activeAssignment.assignedUserId}/feedbacks/`,
+          {
+            feedback: {
+              performanceReviewId: this.activeAssignment.performanceReviewId,
+              answers: this.activeAssignment.performanceReview.categories.map(
+                (category) => ({
+                  reviewCategoryId: category.id,
+                  rating: +category.rating,
+                  explanation: category.explanation
+                })
+              )
+            }
           }
-        })
+        )
         this.$nuxt.$emit('snackbar', {
           color: 'success',
           message: 'Successfully submitted feedback!'
