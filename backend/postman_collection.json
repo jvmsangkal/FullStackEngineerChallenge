@@ -382,7 +382,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/api/users/503fc5a9-e9a3-4602-886c-80ea0816f8e3/feedback_assignments/",
+					"raw": "localhost:5000/api/users/7a57ea22-c8e3-49ee-a838-64adc03906c2/feedback_assignments/",
 					"host": [
 						"localhost"
 					],
@@ -390,7 +390,7 @@
 					"path": [
 						"api",
 						"users",
-						"503fc5a9-e9a3-4602-886c-80ea0816f8e3",
+						"7a57ea22-c8e3-49ee-a838-64adc03906c2",
 						"feedback_assignments",
 						""
 					]
@@ -415,7 +415,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"feedbackAssignment\": {\n\t\t\"userId\": \"503fc5a9-e9a3-4602-886c-80ea0816f8e3\",\n\t\t\"assignedUserId\": \"53e2092a-85ab-48eb-a82e-4fb82d26a0f7\",\n\t\t\"performanceReviewId\": 12\n\t}\n}",
+					"raw": "{\n\t\"feedbackAssignment\": {\n\t\t\"userId\": \"7a57ea22-c8e3-49ee-a838-64adc03906c2\",\n\t\t\"assignedUserId\": \"53e2092a-85ab-48eb-a82e-4fb82d26a0f7\",\n\t\t\"performanceReviewId\": 12\n\t}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -513,7 +513,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcnV0b0Brb25vaGEuY29tIiwic3ViIjoiNTAzZmM1YTktZTlhMy00NjAyLTg4NmMtODBlYTA4MTZmOGUzIiwiZXhwIjoxNTk0NDczMjQxLCJpYXQiOjE1ODkyODkyNDF9.bYEY8p1jm0FAFn2zJKhhrjcJ5iax_5INeUZ7h5A5PLo",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcnV0b0Brb25vaGEuY29tIiwic3ViIjoiN2E1N2VhMjItYzhlMy00OWVlLWE4MzgtNjRhZGMwMzkwNmMyIiwiZXhwIjoxNTk0NTA5OTk3LCJpYXQiOjE1ODkzMjU5OTd9.j5E1YK-cXK3QvO3MMKvtXhDENsm8j0xnpIDJ2hTltck",
 							"type": "string"
 						}
 					]
@@ -573,7 +573,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:5000/api/users/53e2092a-85ab-48eb-a82e-4fb82d26a0f7/feedbacks",
+					"raw": "localhost:5000/api/users/7a57ea22-c8e3-49ee-a838-64adc03906c2/feedbacks",
 					"host": [
 						"localhost"
 					],
@@ -581,8 +581,51 @@
 					"path": [
 						"api",
 						"users",
-						"53e2092a-85ab-48eb-a82e-4fb82d26a0f7",
+						"7a57ea22-c8e3-49ee-a838-64adc03906c2",
 						"feedbacks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get employee reviewees",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcnV0b0Brb25vaGEuY29tIiwic3ViIjoiN2E1N2VhMjItYzhlMy00OWVlLWE4MzgtNjRhZGMwMzkwNmMyIiwiZXhwIjoxNTk0NTA5OTk3LCJpYXQiOjE1ODkzMjU5OTd9.j5E1YK-cXK3QvO3MMKvtXhDENsm8j0xnpIDJ2hTltck",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/users/me/reviewees",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"me",
+						"reviewees"
 					]
 				}
 			},
